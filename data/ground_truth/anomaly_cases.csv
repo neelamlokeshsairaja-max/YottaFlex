@@ -1,0 +1,6 @@
+case_id,issue_type,ground_truth_label,description
+ANOM-001,recommendation_violates_prerequisite,INVALID_RECOMMENDATION,Reject any recommendation where a required skill has mastery below 0.70.
+ANOM-002,attempt_timestamp_order_invalid,INVALID_ATTEMPT_ORDER,Reject event sequences with a timestamp earlier than the prior attempt.
+ANOM-003,content_mapped_to_nonexistent_skill,INVALID_FOREIGN_KEY,Reject a content-skill mapping to an absent skill ID.
+ANOM-004,mastery_uses_future_attempt,TEMPORAL_LEAKAGE,Mastery at recommendation time must include only attempts at or before that time.
+ANOM-005,path_loops_without_progress,NO_PROGRESS_LOOP,Reject repeated path content without a mastery or sequence progression.

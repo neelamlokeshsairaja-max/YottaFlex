@@ -1,0 +1,24 @@
+{
+  "seed": 20261022,
+  "scale": "full",
+  "rows": {
+    "learners": 10000,
+    "courses": 20,
+    "skills": 500,
+    "skill_prerequisites": 499,
+    "content_items": 2000,
+    "content_skills": 2000,
+    "attempts": 500000,
+    "assessment_results": 500000
+  },
+  "recommendations": 29000,
+  "cold_start_learners": 500,
+  "recommendation_reason_codes": {
+    "PREREQUISITES_MET_LOW_MASTERY": 28500,
+    "COLD_START_FOUNDATION": 500
+  },
+  "validation_issues": [],
+  "observed_success_rate": 0.0843,
+  "holdout_followup_coverage": 0.1656,
+  "success_rate_among_followups": 0.5095
+}

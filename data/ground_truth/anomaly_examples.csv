@@ -1,0 +1,6 @@
+case_id,issue_type,entity_id,payload_json,ground_truth_label
+ANOM-001,recommendation_violates_prerequisite,REC-ANOM-001,"{""content_id"": ""CNT-000002"", ""learner_id"": ""LRN-000020"", ""prerequisite_mastery"": 0.0, ""prerequisite_skill_id"": ""SKL-000001"", ""skill_id"": ""SKL-000002""}",INVALID_RECOMMENDATION
+ANOM-002,attempt_timestamp_order_invalid,ATT-LRN-000001-999999,"{""attempt_number"": 2, ""attempted_at"": ""2026-01-01T00:01:00+00:00"", ""learner_id"": ""LRN-000001"", ""previous_attempt_at"": ""2026-01-02 00:01:00+00:00""}",INVALID_ATTEMPT_ORDER
+ANOM-003,content_mapped_to_nonexistent_skill,CSM-ANOM-003,"{""content_id"": ""CNT-000001"", ""skill_id"": ""SKL-999999""}",INVALID_FOREIGN_KEY
+ANOM-004,mastery_uses_future_attempt,REC-ANOM-004-ATT-LRN-009999-000052,"{""future_attempt_at"": ""2026-06-06 00:39:00+00:00"", ""future_attempt_id"": ""ATT-LRN-009999-000052"", ""future_score"": 0.923, ""learner_id"": ""LRN-009999"", ""recommendation_at"": ""2026-06-05T00:39:00+00:00"", ""skill_id"": ""SKL-000052""}",TEMPORAL_LEAKAGE
+ANOM-005,path_loops_without_progress,PATH-2026-000020,"{""learner_id"": ""LRN-000020"", ""sequence"": [{""content_id"": ""CNT-000001"", ""mastery_after"": 0.2, ""mastery_before"": 0.2, ""sequence_no"": 1}, {""content_id"": ""CNT-000001"", ""mastery_after"": 0.2, ""mastery_before"": 0.2, ""sequence_no"": 2}]}",NO_PROGRESS_LOOP
