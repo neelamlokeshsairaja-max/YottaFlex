@@ -1,0 +1,21 @@
+skill_id,skill_name,difficulty_level
+SKL-000001,Python Basics,Advanced
+SKL-000002,Variables,Advanced
+SKL-000003,Data Types,Intermediate
+SKL-000004,Operators,Advanced
+SKL-000005,Conditional Statements,Beginner
+SKL-000006,Loops,Intermediate
+SKL-000007,Functions,Intermediate
+SKL-000008,Lists,Beginner
+SKL-000009,Tuples,Beginner
+SKL-000010,Dictionaries,Beginner
+SKL-000011,Sets,Intermediate
+SKL-000012,Strings,Advanced
+SKL-000013,File Handling,Advanced
+SKL-000014,Exception Handling,Beginner
+SKL-000015,OOP,Beginner
+SKL-000016,SQL Basics,Advanced
+SKL-000017,SQL Joins,Advanced
+SKL-000018,SQL Group By,Beginner
+SKL-000019,Statistics,Intermediate
+SKL-000020,Data Visualization,Advanced

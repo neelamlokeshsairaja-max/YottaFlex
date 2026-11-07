@@ -1,0 +1,501 @@
+skill_id,skill_name,difficulty_level
+SKL-000001,Python Basics,Beginner
+SKL-000002,Variables,Beginner
+SKL-000003,Data Types,Beginner
+SKL-000004,Operators,Beginner
+SKL-000005,Conditionals,Beginner
+SKL-000006,Loops,Beginner
+SKL-000007,Functions,Beginner
+SKL-000008,Lists,Beginner
+SKL-000009,Tuples,Beginner
+SKL-000010,Dictionaries,Beginner
+SKL-000011,Sets,Beginner
+SKL-000012,Strings,Beginner
+SKL-000013,File Handling,Beginner
+SKL-000014,Exceptions,Beginner
+SKL-000015,OOP,Beginner
+SKL-000016,SQL Basics,Beginner
+SKL-000017,SQL Joins,Beginner
+SKL-000018,SQL Group By,Beginner
+SKL-000019,Statistics,Beginner
+SKL-000020,Data Visualization,Beginner
+SKL-000021,Python Basics 21,Beginner
+SKL-000022,Variables 22,Beginner
+SKL-000023,Data Types 23,Beginner
+SKL-000024,Operators 24,Beginner
+SKL-000025,Conditionals 25,Beginner
+SKL-000026,Loops 26,Beginner
+SKL-000027,Functions 27,Beginner
+SKL-000028,Lists 28,Beginner
+SKL-000029,Tuples 29,Beginner
+SKL-000030,Dictionaries 30,Beginner
+SKL-000031,Sets 31,Beginner
+SKL-000032,Strings 32,Beginner
+SKL-000033,File Handling 33,Beginner
+SKL-000034,Exceptions 34,Beginner
+SKL-000035,OOP 35,Beginner
+SKL-000036,SQL Basics 36,Beginner
+SKL-000037,SQL Joins 37,Beginner
+SKL-000038,SQL Group By 38,Beginner
+SKL-000039,Statistics 39,Beginner
+SKL-000040,Data Visualization 40,Beginner
+SKL-000041,Python Basics 41,Beginner
+SKL-000042,Variables 42,Beginner
+SKL-000043,Data Types 43,Beginner
+SKL-000044,Operators 44,Beginner
+SKL-000045,Conditionals 45,Beginner
+SKL-000046,Loops 46,Beginner
+SKL-000047,Functions 47,Beginner
+SKL-000048,Lists 48,Beginner
+SKL-000049,Tuples 49,Beginner
+SKL-000050,Dictionaries 50,Beginner
+SKL-000051,Sets 51,Beginner
+SKL-000052,Strings 52,Beginner
+SKL-000053,File Handling 53,Beginner
+SKL-000054,Exceptions 54,Beginner
+SKL-000055,OOP 55,Beginner
+SKL-000056,SQL Basics 56,Beginner
+SKL-000057,SQL Joins 57,Beginner
+SKL-000058,SQL Group By 58,Beginner
+SKL-000059,Statistics 59,Beginner
+SKL-000060,Data Visualization 60,Beginner
+SKL-000061,Python Basics 61,Beginner
+SKL-000062,Variables 62,Beginner
+SKL-000063,Data Types 63,Beginner
+SKL-000064,Operators 64,Beginner
+SKL-000065,Conditionals 65,Beginner
+SKL-000066,Loops 66,Beginner
+SKL-000067,Functions 67,Beginner
+SKL-000068,Lists 68,Beginner
+SKL-000069,Tuples 69,Beginner
+SKL-000070,Dictionaries 70,Beginner
+SKL-000071,Sets 71,Beginner
+SKL-000072,Strings 72,Beginner
+SKL-000073,File Handling 73,Beginner
+SKL-000074,Exceptions 74,Beginner
+SKL-000075,OOP 75,Beginner
+SKL-000076,SQL Basics 76,Beginner
+SKL-000077,SQL Joins 77,Beginner
+SKL-000078,SQL Group By 78,Beginner
+SKL-000079,Statistics 79,Beginner
+SKL-000080,Data Visualization 80,Beginner
+SKL-000081,Python Basics 81,Beginner
+SKL-000082,Variables 82,Beginner
+SKL-000083,Data Types 83,Beginner
+SKL-000084,Operators 84,Beginner
+SKL-000085,Conditionals 85,Beginner
+SKL-000086,Loops 86,Beginner
+SKL-000087,Functions 87,Beginner
+SKL-000088,Lists 88,Beginner
+SKL-000089,Tuples 89,Beginner
+SKL-000090,Dictionaries 90,Beginner
+SKL-000091,Sets 91,Beginner
+SKL-000092,Strings 92,Beginner
+SKL-000093,File Handling 93,Beginner
+SKL-000094,Exceptions 94,Beginner
+SKL-000095,OOP 95,Beginner
+SKL-000096,SQL Basics 96,Beginner
+SKL-000097,SQL Joins 97,Beginner
+SKL-000098,SQL Group By 98,Beginner
+SKL-000099,Statistics 99,Beginner
+SKL-000100,Data Visualization 100,Beginner
+SKL-000101,Python Basics 101,Beginner
+SKL-000102,Variables 102,Beginner
+SKL-000103,Data Types 103,Beginner
+SKL-000104,Operators 104,Beginner
+SKL-000105,Conditionals 105,Beginner
+SKL-000106,Loops 106,Beginner
+SKL-000107,Functions 107,Beginner
+SKL-000108,Lists 108,Beginner
+SKL-000109,Tuples 109,Beginner
+SKL-000110,Dictionaries 110,Beginner
+SKL-000111,Sets 111,Beginner
+SKL-000112,Strings 112,Beginner
+SKL-000113,File Handling 113,Beginner
+SKL-000114,Exceptions 114,Beginner
+SKL-000115,OOP 115,Beginner
+SKL-000116,SQL Basics 116,Beginner
+SKL-000117,SQL Joins 117,Beginner
+SKL-000118,SQL Group By 118,Beginner
+SKL-000119,Statistics 119,Beginner
+SKL-000120,Data Visualization 120,Beginner
+SKL-000121,Python Basics 121,Beginner
+SKL-000122,Variables 122,Beginner
+SKL-000123,Data Types 123,Beginner
+SKL-000124,Operators 124,Beginner
+SKL-000125,Conditionals 125,Beginner
+SKL-000126,Loops 126,Beginner
+SKL-000127,Functions 127,Beginner
+SKL-000128,Lists 128,Beginner
+SKL-000129,Tuples 129,Beginner
+SKL-000130,Dictionaries 130,Beginner
+SKL-000131,Sets 131,Beginner
+SKL-000132,Strings 132,Beginner
+SKL-000133,File Handling 133,Beginner
+SKL-000134,Exceptions 134,Beginner
+SKL-000135,OOP 135,Beginner
+SKL-000136,SQL Basics 136,Beginner
+SKL-000137,SQL Joins 137,Beginner
+SKL-000138,SQL Group By 138,Beginner
+SKL-000139,Statistics 139,Beginner
+SKL-000140,Data Visualization 140,Beginner
+SKL-000141,Python Basics 141,Beginner
+SKL-000142,Variables 142,Beginner
+SKL-000143,Data Types 143,Beginner
+SKL-000144,Operators 144,Beginner
+SKL-000145,Conditionals 145,Beginner
+SKL-000146,Loops 146,Beginner
+SKL-000147,Functions 147,Beginner
+SKL-000148,Lists 148,Beginner
+SKL-000149,Tuples 149,Beginner
+SKL-000150,Dictionaries 150,Beginner
+SKL-000151,Sets 151,Beginner
+SKL-000152,Strings 152,Beginner
+SKL-000153,File Handling 153,Beginner
+SKL-000154,Exceptions 154,Beginner
+SKL-000155,OOP 155,Beginner
+SKL-000156,SQL Basics 156,Beginner
+SKL-000157,SQL Joins 157,Beginner
+SKL-000158,SQL Group By 158,Beginner
+SKL-000159,Statistics 159,Beginner
+SKL-000160,Data Visualization 160,Beginner
+SKL-000161,Python Basics 161,Beginner
+SKL-000162,Variables 162,Beginner
+SKL-000163,Data Types 163,Beginner
+SKL-000164,Operators 164,Beginner
+SKL-000165,Conditionals 165,Beginner
+SKL-000166,Loops 166,Beginner
+SKL-000167,Functions 167,Intermediate
+SKL-000168,Lists 168,Intermediate
+SKL-000169,Tuples 169,Intermediate
+SKL-000170,Dictionaries 170,Intermediate
+SKL-000171,Sets 171,Intermediate
+SKL-000172,Strings 172,Intermediate
+SKL-000173,File Handling 173,Intermediate
+SKL-000174,Exceptions 174,Intermediate
+SKL-000175,OOP 175,Intermediate
+SKL-000176,SQL Basics 176,Intermediate
+SKL-000177,SQL Joins 177,Intermediate
+SKL-000178,SQL Group By 178,Intermediate
+SKL-000179,Statistics 179,Intermediate
+SKL-000180,Data Visualization 180,Intermediate
+SKL-000181,Python Basics 181,Intermediate
+SKL-000182,Variables 182,Intermediate
+SKL-000183,Data Types 183,Intermediate
+SKL-000184,Operators 184,Intermediate
+SKL-000185,Conditionals 185,Intermediate
+SKL-000186,Loops 186,Intermediate
+SKL-000187,Functions 187,Intermediate
+SKL-000188,Lists 188,Intermediate
+SKL-000189,Tuples 189,Intermediate
+SKL-000190,Dictionaries 190,Intermediate
+SKL-000191,Sets 191,Intermediate
+SKL-000192,Strings 192,Intermediate
+SKL-000193,File Handling 193,Intermediate
+SKL-000194,Exceptions 194,Intermediate
+SKL-000195,OOP 195,Intermediate
+SKL-000196,SQL Basics 196,Intermediate
+SKL-000197,SQL Joins 197,Intermediate
+SKL-000198,SQL Group By 198,Intermediate
+SKL-000199,Statistics 199,Intermediate
+SKL-000200,Data Visualization 200,Intermediate
+SKL-000201,Python Basics 201,Intermediate
+SKL-000202,Variables 202,Intermediate
+SKL-000203,Data Types 203,Intermediate
+SKL-000204,Operators 204,Intermediate
+SKL-000205,Conditionals 205,Intermediate
+SKL-000206,Loops 206,Intermediate
+SKL-000207,Functions 207,Intermediate
+SKL-000208,Lists 208,Intermediate
+SKL-000209,Tuples 209,Intermediate
+SKL-000210,Dictionaries 210,Intermediate
+SKL-000211,Sets 211,Intermediate
+SKL-000212,Strings 212,Intermediate
+SKL-000213,File Handling 213,Intermediate
+SKL-000214,Exceptions 214,Intermediate
+SKL-000215,OOP 215,Intermediate
+SKL-000216,SQL Basics 216,Intermediate
+SKL-000217,SQL Joins 217,Intermediate
+SKL-000218,SQL Group By 218,Intermediate
+SKL-000219,Statistics 219,Intermediate
+SKL-000220,Data Visualization 220,Intermediate
+SKL-000221,Python Basics 221,Intermediate
+SKL-000222,Variables 222,Intermediate
+SKL-000223,Data Types 223,Intermediate
+SKL-000224,Operators 224,Intermediate
+SKL-000225,Conditionals 225,Intermediate
+SKL-000226,Loops 226,Intermediate
+SKL-000227,Functions 227,Intermediate
+SKL-000228,Lists 228,Intermediate
+SKL-000229,Tuples 229,Intermediate
+SKL-000230,Dictionaries 230,Intermediate
+SKL-000231,Sets 231,Intermediate
+SKL-000232,Strings 232,Intermediate
+SKL-000233,File Handling 233,Intermediate
+SKL-000234,Exceptions 234,Intermediate
+SKL-000235,OOP 235,Intermediate
+SKL-000236,SQL Basics 236,Intermediate
+SKL-000237,SQL Joins 237,Intermediate
+SKL-000238,SQL Group By 238,Intermediate
+SKL-000239,Statistics 239,Intermediate
+SKL-000240,Data Visualization 240,Intermediate
+SKL-000241,Python Basics 241,Intermediate
+SKL-000242,Variables 242,Intermediate
+SKL-000243,Data Types 243,Intermediate
+SKL-000244,Operators 244,Intermediate
+SKL-000245,Conditionals 245,Intermediate
+SKL-000246,Loops 246,Intermediate
+SKL-000247,Functions 247,Intermediate
+SKL-000248,Lists 248,Intermediate
+SKL-000249,Tuples 249,Intermediate
+SKL-000250,Dictionaries 250,Intermediate
+SKL-000251,Sets 251,Intermediate
+SKL-000252,Strings 252,Intermediate
+SKL-000253,File Handling 253,Intermediate
+SKL-000254,Exceptions 254,Intermediate
+SKL-000255,OOP 255,Intermediate
+SKL-000256,SQL Basics 256,Intermediate
+SKL-000257,SQL Joins 257,Intermediate
+SKL-000258,SQL Group By 258,Intermediate
+SKL-000259,Statistics 259,Intermediate
+SKL-000260,Data Visualization 260,Intermediate
+SKL-000261,Python Basics 261,Intermediate
+SKL-000262,Variables 262,Intermediate
+SKL-000263,Data Types 263,Intermediate
+SKL-000264,Operators 264,Intermediate
+SKL-000265,Conditionals 265,Intermediate
+SKL-000266,Loops 266,Intermediate
+SKL-000267,Functions 267,Intermediate
+SKL-000268,Lists 268,Intermediate
+SKL-000269,Tuples 269,Intermediate
+SKL-000270,Dictionaries 270,Intermediate
+SKL-000271,Sets 271,Intermediate
+SKL-000272,Strings 272,Intermediate
+SKL-000273,File Handling 273,Intermediate
+SKL-000274,Exceptions 274,Intermediate
+SKL-000275,OOP 275,Intermediate
+SKL-000276,SQL Basics 276,Intermediate
+SKL-000277,SQL Joins 277,Intermediate
+SKL-000278,SQL Group By 278,Intermediate
+SKL-000279,Statistics 279,Intermediate
+SKL-000280,Data Visualization 280,Intermediate
+SKL-000281,Python Basics 281,Intermediate
+SKL-000282,Variables 282,Intermediate
+SKL-000283,Data Types 283,Intermediate
+SKL-000284,Operators 284,Intermediate
+SKL-000285,Conditionals 285,Intermediate
+SKL-000286,Loops 286,Intermediate
+SKL-000287,Functions 287,Intermediate
+SKL-000288,Lists 288,Intermediate
+SKL-000289,Tuples 289,Intermediate
+SKL-000290,Dictionaries 290,Intermediate
+SKL-000291,Sets 291,Intermediate
+SKL-000292,Strings 292,Intermediate
+SKL-000293,File Handling 293,Intermediate
+SKL-000294,Exceptions 294,Intermediate
+SKL-000295,OOP 295,Intermediate
+SKL-000296,SQL Basics 296,Intermediate
+SKL-000297,SQL Joins 297,Intermediate
+SKL-000298,SQL Group By 298,Intermediate
+SKL-000299,Statistics 299,Intermediate
+SKL-000300,Data Visualization 300,Intermediate
+SKL-000301,Python Basics 301,Intermediate
+SKL-000302,Variables 302,Intermediate
+SKL-000303,Data Types 303,Intermediate
+SKL-000304,Operators 304,Intermediate
+SKL-000305,Conditionals 305,Intermediate
+SKL-000306,Loops 306,Intermediate
+SKL-000307,Functions 307,Intermediate
+SKL-000308,Lists 308,Intermediate
+SKL-000309,Tuples 309,Intermediate
+SKL-000310,Dictionaries 310,Intermediate
+SKL-000311,Sets 311,Intermediate
+SKL-000312,Strings 312,Intermediate
+SKL-000313,File Handling 313,Intermediate
+SKL-000314,Exceptions 314,Intermediate
+SKL-000315,OOP 315,Intermediate
+SKL-000316,SQL Basics 316,Intermediate
+SKL-000317,SQL Joins 317,Intermediate
+SKL-000318,SQL Group By 318,Intermediate
+SKL-000319,Statistics 319,Intermediate
+SKL-000320,Data Visualization 320,Intermediate
+SKL-000321,Python Basics 321,Intermediate
+SKL-000322,Variables 322,Intermediate
+SKL-000323,Data Types 323,Intermediate
+SKL-000324,Operators 324,Intermediate
+SKL-000325,Conditionals 325,Intermediate
+SKL-000326,Loops 326,Intermediate
+SKL-000327,Functions 327,Intermediate
+SKL-000328,Lists 328,Intermediate
+SKL-000329,Tuples 329,Intermediate
+SKL-000330,Dictionaries 330,Intermediate
+SKL-000331,Sets 331,Intermediate
+SKL-000332,Strings 332,Intermediate
+SKL-000333,File Handling 333,Intermediate
+SKL-000334,Exceptions 334,Advanced
+SKL-000335,OOP 335,Advanced
+SKL-000336,SQL Basics 336,Advanced
+SKL-000337,SQL Joins 337,Advanced
+SKL-000338,SQL Group By 338,Advanced
+SKL-000339,Statistics 339,Advanced
+SKL-000340,Data Visualization 340,Advanced
+SKL-000341,Python Basics 341,Advanced
+SKL-000342,Variables 342,Advanced
+SKL-000343,Data Types 343,Advanced
+SKL-000344,Operators 344,Advanced
+SKL-000345,Conditionals 345,Advanced
+SKL-000346,Loops 346,Advanced
+SKL-000347,Functions 347,Advanced
+SKL-000348,Lists 348,Advanced
+SKL-000349,Tuples 349,Advanced
+SKL-000350,Dictionaries 350,Advanced
+SKL-000351,Sets 351,Advanced
+SKL-000352,Strings 352,Advanced
+SKL-000353,File Handling 353,Advanced
+SKL-000354,Exceptions 354,Advanced
+SKL-000355,OOP 355,Advanced
+SKL-000356,SQL Basics 356,Advanced
+SKL-000357,SQL Joins 357,Advanced
+SKL-000358,SQL Group By 358,Advanced
+SKL-000359,Statistics 359,Advanced
+SKL-000360,Data Visualization 360,Advanced
+SKL-000361,Python Basics 361,Advanced
+SKL-000362,Variables 362,Advanced
+SKL-000363,Data Types 363,Advanced
+SKL-000364,Operators 364,Advanced
+SKL-000365,Conditionals 365,Advanced
+SKL-000366,Loops 366,Advanced
+SKL-000367,Functions 367,Advanced
+SKL-000368,Lists 368,Advanced
+SKL-000369,Tuples 369,Advanced
+SKL-000370,Dictionaries 370,Advanced
+SKL-000371,Sets 371,Advanced
+SKL-000372,Strings 372,Advanced
+SKL-000373,File Handling 373,Advanced
+SKL-000374,Exceptions 374,Advanced
+SKL-000375,OOP 375,Advanced
+SKL-000376,SQL Basics 376,Advanced
+SKL-000377,SQL Joins 377,Advanced
+SKL-000378,SQL Group By 378,Advanced
+SKL-000379,Statistics 379,Advanced
+SKL-000380,Data Visualization 380,Advanced
+SKL-000381,Python Basics 381,Advanced
+SKL-000382,Variables 382,Advanced
+SKL-000383,Data Types 383,Advanced
+SKL-000384,Operators 384,Advanced
+SKL-000385,Conditionals 385,Advanced
+SKL-000386,Loops 386,Advanced
+SKL-000387,Functions 387,Advanced
+SKL-000388,Lists 388,Advanced
+SKL-000389,Tuples 389,Advanced
+SKL-000390,Dictionaries 390,Advanced
+SKL-000391,Sets 391,Advanced
+SKL-000392,Strings 392,Advanced
+SKL-000393,File Handling 393,Advanced
+SKL-000394,Exceptions 394,Advanced
+SKL-000395,OOP 395,Advanced
+SKL-000396,SQL Basics 396,Advanced
+SKL-000397,SQL Joins 397,Advanced
+SKL-000398,SQL Group By 398,Advanced
+SKL-000399,Statistics 399,Advanced
+SKL-000400,Data Visualization 400,Advanced
+SKL-000401,Python Basics 401,Advanced
+SKL-000402,Variables 402,Advanced
+SKL-000403,Data Types 403,Advanced
+SKL-000404,Operators 404,Advanced
+SKL-000405,Conditionals 405,Advanced
+SKL-000406,Loops 406,Advanced
+SKL-000407,Functions 407,Advanced
+SKL-000408,Lists 408,Advanced
+SKL-000409,Tuples 409,Advanced
+SKL-000410,Dictionaries 410,Advanced
+SKL-000411,Sets 411,Advanced
+SKL-000412,Strings 412,Advanced
+SKL-000413,File Handling 413,Advanced
+SKL-000414,Exceptions 414,Advanced
+SKL-000415,OOP 415,Advanced
+SKL-000416,SQL Basics 416,Advanced
+SKL-000417,SQL Joins 417,Advanced
+SKL-000418,SQL Group By 418,Advanced
+SKL-000419,Statistics 419,Advanced
+SKL-000420,Data Visualization 420,Advanced
+SKL-000421,Python Basics 421,Advanced
+SKL-000422,Variables 422,Advanced
+SKL-000423,Data Types 423,Advanced
+SKL-000424,Operators 424,Advanced
+SKL-000425,Conditionals 425,Advanced
+SKL-000426,Loops 426,Advanced
+SKL-000427,Functions 427,Advanced
+SKL-000428,Lists 428,Advanced
+SKL-000429,Tuples 429,Advanced
+SKL-000430,Dictionaries 430,Advanced
+SKL-000431,Sets 431,Advanced
+SKL-000432,Strings 432,Advanced
+SKL-000433,File Handling 433,Advanced
+SKL-000434,Exceptions 434,Advanced
+SKL-000435,OOP 435,Advanced
+SKL-000436,SQL Basics 436,Advanced
+SKL-000437,SQL Joins 437,Advanced
+SKL-000438,SQL Group By 438,Advanced
+SKL-000439,Statistics 439,Advanced
+SKL-000440,Data Visualization 440,Advanced
+SKL-000441,Python Basics 441,Advanced
+SKL-000442,Variables 442,Advanced
+SKL-000443,Data Types 443,Advanced
+SKL-000444,Operators 444,Advanced
+SKL-000445,Conditionals 445,Advanced
+SKL-000446,Loops 446,Advanced
+SKL-000447,Functions 447,Advanced
+SKL-000448,Lists 448,Advanced
+SKL-000449,Tuples 449,Advanced
+SKL-000450,Dictionaries 450,Advanced
+SKL-000451,Sets 451,Advanced
+SKL-000452,Strings 452,Advanced
+SKL-000453,File Handling 453,Advanced
+SKL-000454,Exceptions 454,Advanced
+SKL-000455,OOP 455,Advanced
+SKL-000456,SQL Basics 456,Advanced
+SKL-000457,SQL Joins 457,Advanced
+SKL-000458,SQL Group By 458,Advanced
+SKL-000459,Statistics 459,Advanced
+SKL-000460,Data Visualization 460,Advanced
+SKL-000461,Python Basics 461,Advanced
+SKL-000462,Variables 462,Advanced
+SKL-000463,Data Types 463,Advanced
+SKL-000464,Operators 464,Advanced
+SKL-000465,Conditionals 465,Advanced
+SKL-000466,Loops 466,Advanced
+SKL-000467,Functions 467,Advanced
+SKL-000468,Lists 468,Advanced
+SKL-000469,Tuples 469,Advanced
+SKL-000470,Dictionaries 470,Advanced
+SKL-000471,Sets 471,Advanced
+SKL-000472,Strings 472,Advanced
+SKL-000473,File Handling 473,Advanced
+SKL-000474,Exceptions 474,Advanced
+SKL-000475,OOP 475,Advanced
+SKL-000476,SQL Basics 476,Advanced
+SKL-000477,SQL Joins 477,Advanced
+SKL-000478,SQL Group By 478,Advanced
+SKL-000479,Statistics 479,Advanced
+SKL-000480,Data Visualization 480,Advanced
+SKL-000481,Python Basics 481,Advanced
+SKL-000482,Variables 482,Advanced
+SKL-000483,Data Types 483,Advanced
+SKL-000484,Operators 484,Advanced
+SKL-000485,Conditionals 485,Advanced
+SKL-000486,Loops 486,Advanced
+SKL-000487,Functions 487,Advanced
+SKL-000488,Lists 488,Advanced
+SKL-000489,Tuples 489,Advanced
+SKL-000490,Dictionaries 490,Advanced
+SKL-000491,Sets 491,Advanced
+SKL-000492,Strings 492,Advanced
+SKL-000493,File Handling 493,Advanced
+SKL-000494,Exceptions 494,Advanced
+SKL-000495,OOP 495,Advanced
+SKL-000496,SQL Basics 496,Advanced
+SKL-000497,SQL Joins 497,Advanced
+SKL-000498,SQL Group By 498,Advanced
+SKL-000499,Statistics 499,Advanced
+SKL-000500,Data Visualization 500,Advanced

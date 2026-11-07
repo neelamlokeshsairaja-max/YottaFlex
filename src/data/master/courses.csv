@@ -1,0 +1,21 @@
+course_id,course_name,course_status
+CRS-000001,Python Programming,Active
+CRS-000002,Data Analytics,Active
+CRS-000003,Machine Learning,Active
+CRS-000004,SQL Database,Active
+CRS-000005,Statistics,Active
+CRS-000006,Data Science,Active
+CRS-000007,Web Development,Active
+CRS-000008,Artificial Intelligence,Active
+CRS-000009,Deep Learning,Active
+CRS-000010,Business Analytics,Active
+CRS-000011,Python for Data Science,Active
+CRS-000012,Advanced SQL,Active
+CRS-000013,Data Visualization,Active
+CRS-000014,Excel Analytics,Active
+CRS-000015,Probability,Active
+CRS-000016,Linear Algebra,Active
+CRS-000017,Flask Development,Active
+CRS-000018,Database Management,Active
+CRS-000019,Data Engineering,Active
+CRS-000020,Generative AI,Active

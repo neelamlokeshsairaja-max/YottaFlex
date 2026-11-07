@@ -1,0 +1,58 @@
+{
+  "seed": 20261022,
+  "generator": "src/pipeline.py",
+  "files": {
+    "data\\ground_truth\\anomaly_cases.csv": {
+      "rows": 5,
+      "sha256": "3dde00bf8e26a6ea3bf736c3a8bcf2ef3c5945baac567edc86acd226fb00ef59"
+    },
+    "data\\ground_truth\\anomaly_examples.csv": {
+      "rows": 5,
+      "sha256": "e5ea9b4d0067bb080c0050a7abbc056675854b229a08385593ed08961f540ecc"
+    },
+    "data\\ground_truth\\recommendation_outcomes.csv": {
+      "rows": 29000,
+      "sha256": "3aefe6fe56b3418efd24117142851a8a4371fd0f81283655aa86febea000bb53"
+    },
+    "data\\master\\content_items.csv": {
+      "rows": 2000,
+      "sha256": "d78c81a0900b6f783d794fd627afc43c99e22a17a54b8eda429fcce7993d9016"
+    },
+    "data\\master\\content_skills.csv": {
+      "rows": 2000,
+      "sha256": "693d2af575d559561402a0e2436b257c18089fab492eb290412fdd0e9db7ef13"
+    },
+    "data\\master\\courses.csv": {
+      "rows": 20,
+      "sha256": "fa9e0493818ce60fc0cf261b749ea99cfc572836bac91dd92b821a5b01e8ae7a"
+    },
+    "data\\master\\learners.csv": {
+      "rows": 10000,
+      "sha256": "b4851873b10191d381f70f1c1eb1d1ad32d1d144961b09dc4ad850b2349e06f4"
+    },
+    "data\\master\\skill_prerequisites.csv": {
+      "rows": 499,
+      "sha256": "fa2f02387948f621dae717103eefcb1b34ddedc05ed6e0649db9c1dbe6bd84da"
+    },
+    "data\\master\\skills.csv": {
+      "rows": 500,
+      "sha256": "f2e6cd4996606b95e4b8f7620fd7de0603f49ccff07129b11e0c0fd9809587f2"
+    },
+    "data\\outputs\\learning_paths.csv": {
+      "rows": 29000,
+      "sha256": "469619dd6c7fea446f38755ac5e38827ac845484575b85b084aad762bfe302a8"
+    },
+    "data\\outputs\\recommendations.csv": {
+      "rows": 29000,
+      "sha256": "14b2a3238b0e62e75566cf856f9984ee99f5dab258bf54895fe8eaa9a18c09ff"
+    },
+    "data\\transactions\\assessment_results.csv": {
+      "rows": 500000,
+      "sha256": "e8a1c0f1dc6a0f933899db22533bc7f6f8644f26a47ec2898a768fc3fbf25b06"
+    },
+    "data\\transactions\\attempts.csv": {
+      "rows": 500000,
+      "sha256": "3ad6809c3522862b53d103515cc16bec706190ee2236a30472d76c86f4811866"
+    }
+  }
+}
