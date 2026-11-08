@@ -15,7 +15,7 @@ except ImportError:
 REQUIRED={
  "learners":["learner_id","learner_name","track_id","experience_level","learner_status"],
  "courses":["course_id","course_name","course_status"],
- "skills":["skill_id","skill_name","domain","difficulty_level"],
+ "skills":["skill_id","skill_name","track_id","domain","difficulty_level"],
  "skill_prerequisites":["prerequisite_id","skill_id","prerequisite_skill_id","effective_from"],
  "content_items":["content_id","course_id","content_title","content_type","difficulty_level","duration_minutes","content_status"],
  "content_skills":["content_skill_id","content_id","skill_id"],
@@ -104,6 +104,11 @@ def validate(tables, recommendations=None, paths=None, decisions=None, events=No
     fk("attempts","learner_id","learners","learner_id"); fk("attempts","content_id","content_items","content_id")
     fk("skill_prerequisites","skill_id","skills","skill_id"); fk("skill_prerequisites","prerequisite_skill_id","skills","skill_id")
     fk("assessment_results","assessment_id","attempts","attempt_id")
+    valid_tracks=set(tables["learners"].track_id.dropna())
+    invalid_track=~tables["skills"].track_id.isin(valid_tracks)
+    for idx in tables["skills"].index[invalid_track][:100]:
+        row=tables["skills"].loc[idx]
+        issues.append(_issue("skills",row.skill_id,"track_id","INVALID_FOREIGN_KEY","learner track ID",row.track_id))
     for name in ["attempts","assessment_results"]:
         frame=tables[name]
         scores=pd.to_numeric(frame.score,errors="coerce")
@@ -179,6 +184,8 @@ def validate(tables, recommendations=None, paths=None, decisions=None, events=No
             content_by_id=tables["content_items"].set_index("content_id").to_dict("index")
             course_by_id=tables["courses"].set_index("course_id").course_status.to_dict()
             learner_by_id=tables["learners"].set_index("learner_id").learner_status.to_dict()
+            learner_track_by_id=tables["learners"].set_index("learner_id").track_id.to_dict()
+            skill_track_by_id=tables["skills"].set_index("skill_id").track_id.to_dict()
             recommendation_times=parse_utc(recommendations.recommended_at).tolist()
             recommendation_masteries=pd.to_numeric(recommendations.mastery_at_recommendation,errors="coerce").tolist()
             recommendation_ranks=pd.to_numeric(recommendations["rank"],errors="coerce").tolist()
@@ -226,6 +233,8 @@ def validate(tables, recommendations=None, paths=None, decisions=None, events=No
                 except (TypeError,ValueError):
                     declared=[]; issues.append(_issue("recommendations",r.recommendation_id,"mapped_skill_ids","INVALID_EVIDENCE_JSON","JSON skill ID list",r.mapped_skill_ids))
                 for mapped_skill in actual_skills:
+                    if skill_track_by_id[mapped_skill]!=learner_track_by_id[r.learner_id]:
+                        issues.append(_issue("recommendations",r.recommendation_id,"skill_id","TRACK_SKILL_MISMATCH",learner_track_by_id[r.learner_id],mapped_skill))
                     mapped_mastery=mastery_cache[key].get(mapped_skill,{"mastery":0.0})["mastery"]
                     if mapped_mastery>=.8:
                         issues.append(_issue("recommendations",r.recommendation_id,"content_id","MASTERED_CONTENT_RECOMMENDED","all mapped skills below 0.80",mapped_skill))

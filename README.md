@@ -48,7 +48,7 @@ versioned CSV / JSONL / SQLite snapshot
 
 - Mastery is the arithmetic mean of official assessment scores for a learner-skill, using only events at or before the recommendation timestamp. The stored estimate and exact contributing attempt and assessment IDs are independently reconciled.
 - Active prerequisite intervals use `[effective_from, effective_to)`. Eligibility requires **all active direct parents** to have mastery of at least 0.70. Target skills below 0.80 are eligible. Cycles and self-edges fail validation.
-- A content item that covers multiple skills is eligible only when every mapped skill is eligible. The lowest-mastery covered skill is the recommendation focus; the explanation records all covered skills and their prerequisite evidence.
+- Learners are recommended activities mapped to skills in their assigned track. A multi-skill activity is eligible only when every mapped skill is in that track and otherwise eligible. The lowest-mastery covered skill is the recommendation focus; the explanation records all covered skills and their prerequisite evidence.
 - Content difficulty follows the focus skill’s mastery band. If no exact difficulty exists among eligible items, the nearest available level is selected and the fallback is recorded in the reason code and explanation.
 - Cold-start learners receive foundation activities. Inactive learners, prerequisite blocks, mastered targets, and empty catalogs produce explicit learner-decision codes and schema-correct empty recommendation tables.
 - Generated learners follow varied prerequisite-respecting tracks, use multiple formats and difficulty levels, and include repeated content practice. Scores combine learner ability, item difficulty, practice count, and bounded seeded noise.

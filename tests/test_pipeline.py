@@ -28,10 +28,21 @@ class LearningPipelineChecks(unittest.TestCase):
     def test_baseline_constraints_and_coverage(self):
         t=self.tables
         self.assertEqual(validate(t,pd.concat([self.recs,self.baseline],ignore_index=True),self.paths,self.decisions,self.events),[])
-        self.assertEqual(len(t["attempts"]),304)
+        self.assertEqual(len(t["attempts"]),280)
         self.assertTrue((t["attempts"].groupby(["learner_id","content_id"]).size()>1).any())
         self.assertGreater(len(t["content_skills"]),len(t["content_items"]))
         self.assertEqual(set(t["content_items"].content_type),{"Video","PDF","Quiz","Exercise","Project"})
+        by_difficulty=t["attempts"].merge(t["content_items"][["content_id","difficulty_level"]],on="content_id").groupby("difficulty_level").score.mean()
+        self.assertGreater(by_difficulty["Beginner"],by_difficulty["Advanced"])
+        repeated=t["attempts"].sort_values("attempt_number").groupby(["learner_id","content_id"]).score.agg(["first","last","count"])
+        repeated=repeated[repeated["count"]>1]
+        self.assertGreater(repeated["last"].mean(),repeated["first"].mean())
+        self.assertEqual(set(t["skills"].track_id),set(t["learners"].track_id))
+        self.assertGreater(self.recs.content_id.nunique(),3)
+        learner_tracks=t["learners"].set_index("learner_id").track_id
+        skill_tracks=t["skills"].set_index("skill_id").track_id
+        self.assertTrue(all(learner_tracks[r.learner_id]==skill_tracks[r.skill_id] for r in self.recs.itertuples()))
+        self.assertEqual(t["learners"].loc[~t["learners"].learner_id.isin(t["attempts"].learner_id),"track_id"].nunique(),5)
 
     def test_mastery_is_asof_learner_scoped_and_future_invariant(self):
         t=self.tables; learner=t["attempts"].learner_id.iloc[0]
@@ -44,8 +55,9 @@ class LearningPipelineChecks(unittest.TestCase):
         changed["assessment_results"]=pd.concat([changed["assessment_results"],pd.DataFrame([{"assessment_id":row["attempt_id"],"score":.99,"assessment_type":"ActivityScore"}])],ignore_index=True)
         self.assertEqual(before,compute_mastery(changed,learner,asof))
         self.assertTrue(all(x.startswith(f"ATT-{learner}-") for v in before.values() for x in v["attempt_ids"]))
-        other=compute_mastery(t,"LRN-000002",asof)
-        self.assertTrue(all(x.startswith("ATT-LRN-000002-") for v in other.values() for x in v["attempt_ids"]))
+        other_learner=t["attempts"].learner_id.unique()[1]
+        other=compute_mastery(t,other_learner,asof)
+        self.assertTrue(all(x.startswith(f"ATT-{other_learner}-") for v in other.values() for x in v["attempt_ids"]))
 
     def test_future_evidence_and_fabricated_mastery_are_rejected(self):
         learner=self.tables["attempts"].iloc[0].learner_id
@@ -78,8 +90,9 @@ class LearningPipelineChecks(unittest.TestCase):
 
     def test_nm_order_independent_and_unmet_skill_blocks_item(self):
         t={k:v.copy() for k,v in self.tables.items()}
-        cold=next(x for x in t["learners"].learner_id if x not in set(t["attempts"].learner_id))
         edge=t["skill_prerequisites"].iloc[0]; child=edge.skill_id
+        child_track=t["skills"].set_index("skill_id").loc[child,"track_id"]
+        cold=next(x for x in t["learners"].learner_id if t["learners"].set_index("learner_id").loc[x,"track_id"]==child_track and x not in set(t["attempts"].learner_id))
         content=t["content_skills"].loc[t["content_skills"].skill_id.eq(child),"content_id"].iloc[0]
         pair=t["content_skills"].loc[t["content_skills"].content_id.eq(content),"skill_id"]
         if edge.prerequisite_skill_id not in set(pair):
@@ -96,7 +109,8 @@ class LearningPipelineChecks(unittest.TestCase):
         recs,paths,base,decisions,events=recommend(t,"empty-snapshot")
         self.assertTrue(recs.empty and paths.empty and base.empty)
         self.assertIn("recommendation_id",recs.columns); self.assertIn("sequence_no",paths.columns)
-        self.assertEqual(set(decisions.decision_code),{"NO_ELIGIBLE_CONTENT"})
+        self.assertIn("NO_ELIGIBLE_CONTENT",set(decisions.decision_code))
+        self.assertLessEqual(set(decisions.decision_code),{"NO_ELIGIBLE_CONTENT","ALL_TARGETS_MASTERED","PREREQUISITE_BLOCKED"})
         self.assertEqual(validate(t,pd.concat([recs,base]),paths,decisions,events),[])
 
     def test_invalid_values_mixed_timestamps_and_path_ownership(self):
@@ -109,6 +123,14 @@ class LearningPipelineChecks(unittest.TestCase):
         self.assertNotIn("INVALID_TIMESTAMP",codes)
         bad_path=self.paths.iloc[0:1].copy(); bad_path.loc[bad_path.index[0],"learner_id"]="LRN-999999"
         self.assertIn("INVALID_FOREIGN_KEY",{x["issue_type"] for x in validate(self.tables,self.recs,bad_path)})
+
+    def test_recommendations_stay_within_the_learner_track(self):
+        bad_rec=self.recs.iloc[0:1].copy()
+        skill_track=self.tables["skills"].set_index("skill_id").loc[bad_rec.iloc[0].skill_id,"track_id"]
+        other_track=next(x for x in self.tables["learners"].track_id.unique() if x!=skill_track)
+        learner=self.tables["learners"].loc[self.tables["learners"].track_id.eq(other_track),"learner_id"].iloc[0]
+        bad_rec.loc[bad_rec.index[0],"learner_id"]=learner
+        self.assertIn("TRACK_SKILL_MISMATCH",{x["issue_type"] for x in validate(self.tables,bad_rec)})
 
     def test_all_five_negative_scenarios_execute(self):
         result=run_anomaly_suite(self.tables,self.recs,self.paths)

@@ -16,6 +16,7 @@ CSV and JSONL are UTF-8 with LF line endings. IDs are immutable within a `snapsh
 | `course_status` | enum, required | Active / Inactive; recommendation content must belong to Active course |
 | **Skill** — `skill_id` | string, required | PK, `SKL-######` |
 | `skill_name` | string, required | nonempty, unique in generated data |
+| `track_id` | string, required | `TRK-##`; maps the skill to its learner learning track |
 | `domain` | enum/string, required | Python / Analytics / Databases / Statistics / AI |
 | `difficulty_level` | enum, required | Beginner / Intermediate / Advanced |
 | **SkillPrerequisite** — `prerequisite_id` | string, required | PK, `PRQ-######` |
@@ -101,5 +102,6 @@ CSV and JSONL are UTF-8 with LF line endings. IDs are immutable within a `snapsh
 
 - Course 1:N ContentItem; Learner 1:N Attempt, Recommendation, LearningPath; Attempt 1:1 AssessmentResult in the generated dataset; Recommendation 1:0..1 RecommendationOutcome.
 - ContentItem N:M Skill through unique ContentSkill rows. Skill prerequisites form an effective-dated self-relation. A bridge-expanded attempt contributes the same official score once to each mapped skill’s mastery; event and outcome denominators remain based on distinct Attempt/Recommendation IDs.
+- Every generated Skill belongs to one `track_id`; each recommendation must match the learner’s assigned track. Multi-skill activities are eligible only when all covered skills belong to that track and pass the same mastery and prerequisite checks.
 - Validation returns structured rows with entity, primary key, field, issue type, expected value, and observed value. It checks required nulls separately from FK membership, enums, ID patterns, event chronology, bridge cardinality, assessment score reconciliation, graph cycles/roots, effective intervals, as-of mastery/evidence, mapped-skill eligibility, lifecycle state, path ownership/sequence/loops, and decision/event keys.
 - `ground_truth/anomaly_cases.csv` and `anomaly_results.csv` define and report the five injected exception classes. Fixture payloads and expected labels are not model features.

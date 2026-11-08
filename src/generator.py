@@ -37,7 +37,8 @@ def generate(n_learners=100, n_skills=20, n_content=50, attempts_per_learner=8,
     for i in range(1, n_skills+1):
         track=(i-1)%tracks; level=(i-1)//tracks+1
         skill_rows.append({"skill_id":f"SKL-{i:06d}","skill_name":f"{DOMAINS[track]} Skill {level:03d}",
-                           "domain":DOMAINS[track],"difficulty_level":LEVELS[min(2,(level-1)//max(1,((n_skills+tracks-1)//tracks)//3))]})
+                           "track_id":f"TRK-{track+1:02d}","domain":DOMAINS[track],
+                           "difficulty_level":LEVELS[min(2,(level-1)//max(1,((n_skills+tracks-1)//tracks)//3))]})
     skills=pd.DataFrame(skill_rows)
     prereq_rows=[]
     for i in range(1,n_skills+1):
@@ -71,7 +72,7 @@ def generate(n_learners=100, n_skills=20, n_content=50, attempts_per_learner=8,
         if not options:
             raise ValueError(f"no content is mapped to {sk}; increase n_content")
 
-    active=[i for i in range(1,n_learners+1) if i%20]
+    active=[i for i in range(1,n_learners+1) if ((i-1)//tracks)%20!=0]
     counts=np.full(len(active),attempts_per_learner,dtype=np.int32)
     if target_attempts is not None:
         base,rem=divmod(int(target_attempts),len(active))
@@ -94,7 +95,7 @@ def generate(n_learners=100, n_skills=20, n_content=50, attempts_per_learner=8,
             for child in children_by_skill[sk]:
                 if child not in seen and child not in frontier and all(p in seen for p in parent_by_skill[child]): frontier.append(child)
         if not order: order=track_skills
-        ability=float(np.clip(rng.normal(.63,.12),.25,.95)); practice={}; prior_content={}; seen_content=set(); practice_order_index=0
+        ability=float(np.clip(rng.normal(.73,.12),.30,.98)); practice={}; prior_content={}; seen_content=set(); practice_order_index=0
         for j in range(int(count)):
             planned_retake=(j>0 and j%5==4 and bool(practice))
             if planned_retake:

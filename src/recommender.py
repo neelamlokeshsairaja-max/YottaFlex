@@ -39,7 +39,7 @@ def recommend(tables, snapshot_id="snapshot"):
     course_active=tables["courses"].set_index("course_id").course_status.eq("Active").to_dict()
     content_meta=content.set_index("content_id").to_dict("index")
     active_contents={cid for cid,m in content_meta.items() if m["content_status"]=="Active" and course_active.get(m["course_id"],False)}
-    all_skill_ids=skills.skill_id.tolist()
+    skills_by_track=skills.groupby("track_id",sort=False).skill_id.apply(list).to_dict()
     active_edge_cache={}
     level_rank={"Beginner":0,"Intermediate":1,"Advanced":2}
     recs=[]; baseline_recs=[]; path=[]; decisions=[]; events=[]; rid=0
@@ -58,6 +58,7 @@ def recommend(tables, snapshot_id="snapshot"):
         as_of_text=as_of.isoformat()
         estimates=summarize_evidence(evidence_groups.get(learner_id,expanded_evidence.iloc[0:0]),as_of)
         mastery={sk:v["mastery"] for sk,v in estimates.items()}
+        learner_skill_ids=skills_by_track.get(learner.track_id,[])
         edge_key=as_of.normalize().value
         if edge_key not in active_edge_cache:
             active_edge_cache[edge_key]=active_prerequisites(prereq,as_of)
@@ -65,7 +66,7 @@ def recommend(tables, snapshot_id="snapshot"):
         req_map={}
         for child,parent in active_edges: req_map.setdefault(child,[]).append(parent)
         unmet=[]; eligible_skills=[]
-        for sk in all_skill_ids:
+        for sk in learner_skill_ids:
             level=mastery.get(sk,0.0)
             if level>=.8: continue
             parents=req_map.get(sk,[])
@@ -89,7 +90,7 @@ def recommend(tables, snapshot_id="snapshot"):
                 candidates.append((mastery.get(focus,0.0),focus,cid,mapped,target,selected,fallback))
         candidate_key=lambda x:(x[0],x[1],x[2])
         if not candidates:
-            all_mastered=all(mastery.get(sk,0.0)>=.8 for sk in skills.skill_id)
+            all_mastered=all(mastery.get(sk,0.0)>=.8 for sk in learner_skill_ids)
             if all_mastered: code="ALL_TARGETS_MASTERED"
             elif not eligible_skills and unmet: code="PREREQUISITE_BLOCKED"
             else: code="NO_ELIGIBLE_CONTENT"
