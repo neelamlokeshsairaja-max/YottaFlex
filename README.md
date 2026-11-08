@@ -1,49 +1,74 @@
-# Learning activity recommender
+# YottaFlex Learning Recommender
 
-This is a deterministic synthetic-data project. No learner information is sourced from real people.
+A deterministic, explainable synthetic learning-path workflow. All generated records are synthetic; the offline outcome replay is observational and does not establish causal learning benefit.
 
-## Run
+## Quick start
 
-From the project root, activate the existing environment and run:
+Windows PowerShell:
 
 ```powershell
+py -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python src\pipeline.py
+python -m pip install -r requirements.txt
+python src\pipeline.py --seed 20261022
 ```
 
-For a fresh environment, install the two dependencies first with `python -m pip install -r requirements.txt`.
+macOS/Linux:
 
-The starter run creates 100 learners, 20 skills, 50 activities and 760 attempts (five cold-start learners have no attempts). For the requested full volume (10,000 learners, 500 skills, 2,000 activities and 500,000 attempts), run:
-
-```powershell
-python src\pipeline.py --full
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python src/pipeline.py --seed 20261022
 ```
 
-Use `--seed 20261022` to pin the random seed. The full run may take a few minutes and create sizable CSV files.
+Add `--full` for 10,000 learners, 500 skills, 2,000 content items, and exactly 500,000 attempts. Add `--output-dir PATH` to choose the snapshot root (default: `data/runs`). Every run is staged, validated, then published as an immutable snapshot directory; the prior successful snapshot is preserved. `data/runs/current_run.json` points to the current snapshot. CSV, JSON Lines, a populated SQLite database, the manifest, execution record, and evaluation outputs are written with each snapshot.
 
-## What the pipeline does
+Run focused checks with `python -m unittest discover -s tests -v`. Compare reproducibility by running `python tools/check_reproducibility.py --scale starter` or `--scale full`; the command makes two isolated runs and records row-count and SHA-256 equality in `docs/reproducibility_report.md`.
 
-1. Creates parent/master tables, then dependent attempt and assessment events.
-2. Estimates mastery as the mean score for each learner and skill, using only attempts at or before the recommendation timestamp.
-3. Recommends active content for skills below 0.80 mastery only when every direct prerequisite is at least 0.70. It uses a 60/40 chronological per-learner history/holdout split; cold-start learners receive foundation skills first. Activity difficulty is selected to match estimated mastery.
-4. Writes reason codes, ranked learning paths, outcomes, validation metrics, and SHA-256 row/checksum manifest.
-5. Keeps labeled exception definitions and concrete negative fixtures in `data/ground_truth/`; they do not contaminate baseline input data.
+## Workflow
 
-## Output layout
+```text
+master data + prerequisite DAG
+              ↓ validation
+attempts + official assessment events
+              ↓ chronological 60/40 split
+as-of mastery + effective prerequisite rules
+              ↓ eligible content across all mapped skills
+recommendations + path decisions + evidence events
+              ↓ later same-skill holdout assessments
+outcomes + policy comparison + anomaly checks
+              ↓ staged validation and export
+versioned CSV / JSONL / SQLite snapshot
+```
 
-- `data/master/`: learners, courses, skills, prerequisite graph, content and content-skill bridge.
-- `data/transactions/`: attempts and assessment results.
-- `data/outputs/`: recommendations, learning paths, validation summary and source manifest.
-- `data/ground_truth/`: recommendation outcomes, anomaly definitions and concrete malformed fixtures, isolated from baseline inputs.
+`src/generator.py` creates master and event tables. `src/mastery.py` computes means from authoritative `AssessmentResult.score` at a learner and UTC cutoff. A score is attributed once to every distinct skill mapped to its content; the bridge expansion does not duplicate attempts within any single skill. `src/recommender.py` applies the decision rules. `src/validation.py` returns structured record-level issues and executes the five negative cases. `src/evaluation.py` computes evidence-linked outcomes and compares the ranking policy with a catalog-first policy over the same eligible content and holdout. `src/exports.py` writes LF CSVs, JSONL, the SQLite seed database, and portable hashes. `src/pipeline.py` coordinates the staged run.
 
-## Key rules and limitations
+## Rules and interpretation
 
-- Score scale is 0.0–1.0. Mastery is a transparent arithmetic mean, not a psychometric model.
-- Prerequisite edges form a simple directed chain. Content has one mapped skill in the starter synthetic dataset.
-- Recommendations are generated at the timestamp marking the end of each learner's first 60% of attempts. A later attempt on the recommended skill is labeled `COMPLETED_SUCCESS` at score >= 0.70 or `FOLLOWUP_BELOW_THRESHOLD` below that; no later attempt is `NO_FOLLOWUP`, not proof of failure. The report includes follow-up coverage and success rates.
-- `anomaly_cases.csv` documents exception rules; `anomaly_examples.csv` carries one concrete fixture per scenario. Both are separate from generated baseline records.
-- For a stronger model evaluation, split by timestamp before model tuning. Do not randomly split attempts because that leaks future learner behavior into training.
+- Mastery is the arithmetic mean of official assessment scores for a learner-skill, using only events at or before the recommendation timestamp. The stored estimate and exact contributing attempt and assessment IDs are independently reconciled.
+- Active prerequisite intervals use `[effective_from, effective_to)`. Eligibility requires **all active direct parents** to have mastery of at least 0.70. Target skills below 0.80 are eligible. Cycles and self-edges fail validation.
+- A content item that covers multiple skills is eligible only when every mapped skill is eligible. The lowest-mastery covered skill is the recommendation focus; the explanation records all covered skills and their prerequisite evidence.
+- Content difficulty follows the focus skill’s mastery band. If no exact difficulty exists among eligible items, the nearest available level is selected and the fallback is recorded in the reason code and explanation.
+- Cold-start learners receive foundation activities. Inactive learners, prerequisite blocks, mastered targets, and empty catalogs produce explicit learner-decision codes and schema-correct empty recommendation tables.
+- Generated learners follow varied prerequisite-respecting tracks, use multiple formats and difficulty levels, and include repeated content practice. Scores combine learner ability, item difficulty, practice count, and bounded seeded noise.
+- Outcome labels identify the first later assessment on the recommendation’s focus skill: `COMPLETED_SUCCESS` at score >= 0.70, `FOLLOWUP_BELOW_THRESHOLD` below it, or `NO_FOLLOWUP`. The outcome row includes the actual attempt and assessment IDs, score, timestamp, and learner-specific observation window. Same-skill follow-up is a proxy; it does not prove the recommended content itself was completed. No-follow-up is unknown, not failure.
+- Evaluation reports follow-up coverage and rates by cold/warm cohort, a catalog-first baseline, repeat practice and progress, score boundaries, skill/content coverage, prerequisite-gap exposure, and anomaly detection. Rates are synthetic replay metrics, not accuracy or causal impact.
+- Anomaly examples and expected labels live under `ground_truth`; they are never recommendation features. The pipeline injects one fault at a time into isolated copies and checks the production validator.
 
-## Data dictionary summary
+## Outputs
 
-See `DATA_DICTIONARY.md` for fields, constraints and relationship cardinalities. See `sql/schema.sql/schema.sql` for a relational schema sketch.
+Each `data/runs/<run-id>/` snapshot contains:
+
+- `master/`: learners, courses, skills, effective-dated prerequisite edges, content, and the ContentSkill bridge.
+- `transactions/`: attempts and official assessment results.
+- `outputs/`: ranked and baseline recommendations, learning paths, learner decisions, domain events, validation summary, and source manifest.
+- `ground_truth/`: evidence-linked outcomes, anomaly cases, and detection results.
+- `learning_recommender.sqlite`: populated relational seed with foreign-key and score reconciliation checks.
+- Matching `.jsonl` exports beside each CSV export.
+
+The structured field specification is in [DATA_DICTIONARY.md](DATA_DICTIONARY.md). The relational DDL is [sql/schema.sql](sql/schema.sql). Runtime `STARTED`/`FAILED`/`COMPLETE` records are stored under `data/runs/executions/` separately from deterministic dataset checksums.
+
+## Known limits
+
+The generator is a controlled synthetic replay, not an adaptive production service. The curriculum graph has five branching domains; thresholds are documented fixed rules. Prerequisite eligibility uses direct parents rather than full transitive closure, as explicitly selected for this project. Outputs are snapshots; production ingestion, user privacy controls, instructor overrides, and real-world validation require separate design and authorized data.

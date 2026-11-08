@@ -1,3 +1,8 @@
 .venv/
+.temp/
+.pytest_cache/
 __pycache__/
 *.py[cod]
+data/runs/
+data/reproducibility_runs/
+data/tmp*/
