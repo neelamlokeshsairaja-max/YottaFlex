@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import heapq
 import pandas as pd
 
 try:
@@ -31,6 +32,7 @@ def recommend(tables, snapshot_id="snapshot"):
     evidence_groups={k:v for k,v in expanded_evidence.groupby("learner_id",sort=False)}
     mappings=tables["content_skills"][["content_id","skill_id"]].drop_duplicates()
     skills_by_content=mappings.groupby("content_id").skill_id.apply(lambda s:sorted(set(s))).to_dict()
+    skill_sets_by_content={cid:frozenset(mapped) for cid,mapped in skills_by_content.items()}
     items_by_skill=mappings.groupby("skill_id").content_id.apply(lambda s:sorted(set(s))).to_dict()
     prereq=tables["skill_prerequisites"]
     skill_meta=skills.set_index("skill_id").to_dict("index")
@@ -78,14 +80,14 @@ def recommend(tables, snapshot_id="snapshot"):
                 if cid in considered or cid not in active_contents: continue
                 mapped=skills_by_content.get(cid,[])
                 # A multi-skill item is eligible only if every covered skill is eligible.
-                if not mapped or not set(mapped).issubset(eligible_set): continue
+                if not mapped or not skill_sets_by_content[cid].issubset(eligible_set): continue
                 considered.add(cid)
                 focus=min(mapped,key=lambda x:(mastery.get(x,0.0),x))
                 target="Beginner" if mastery.get(focus,0)<.5 else ("Intermediate" if mastery.get(focus,0)<.7 else "Advanced")
                 selected=content_meta[cid]["difficulty_level"]
                 fallback=selected!=target
                 candidates.append((mastery.get(focus,0.0),focus,cid,mapped,target,selected,fallback))
-        candidates.sort(key=lambda x:(x[0],x[1],x[2]))
+        candidate_key=lambda x:(x[0],x[1],x[2])
         if not candidates:
             all_mastered=all(mastery.get(sk,0.0)>=.8 for sk in skills.skill_id)
             if all_mastered: code="ALL_TARGETS_MASTERED"
@@ -106,7 +108,7 @@ def recommend(tables, snapshot_id="snapshot"):
                               "evidence_assessment_ids":json.dumps(bev["assessment_ids"]),"explanation_json":json.dumps({"policy":"catalog_first_eligible","covered_skill_ids":bmapped,
                                   "history_cutoff_at":as_of_text,"source_attempt_ids":bev["attempt_ids"],"source_assessment_ids":bev["assessment_ids"]},sort_keys=True),"status":"Recommended"})
         path_id=f"PATH-2026-{int(learner_id[-6:]):06d}"
-        for rank,candidate in enumerate(candidates[:3],1):
+        for rank,candidate in enumerate(heapq.nsmallest(3,candidates,key=candidate_key),1):
             mastery_value,focus,cid,mapped,target,selected,fallback=candidate
             reason="COLD_START_FOUNDATION" if not len(known) else ("MASTERY_REINFORCEMENT" if mastery_value>=.7 else "PREREQUISITES_MET_LOW_MASTERY")
             if fallback: reason += "_DIFFICULTY_FALLBACK"
