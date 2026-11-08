@@ -4,7 +4,7 @@ from __future__ import annotations
 import pandas as pd
 
 MASTERY_TOLERANCE = 0.00005
-RULE_VERSION = "mastery-2.0"
+RULE_VERSION = "mastery-2.1"
 
 
 def parse_utc(values):
@@ -41,15 +41,17 @@ def summarize_evidence(evidence, as_of):
     """Aggregate expanded evidence at one UTC cutoff, retaining exact source IDs."""
     cutoff=pd.to_datetime(as_of,format="mixed",utc=True,errors="coerce")
     if pd.isna(cutoff): return {}
-    evidence=evidence.loc[evidence._time.le(cutoff)]
+    evidence=evidence.loc[evidence._time.le(cutoff),["_time","attempt_id","assessment_id","skill_id","score_assessment"]]
     if evidence.empty: return {}
-    result = {}
-    for skill, rows in evidence.groupby("skill_id", sort=False):
-        rows = rows.sort_values(["_time", "attempt_id"])
-        result[skill] = {"mastery": float(rows.score_assessment.mean()),
-                         "attempt_ids": rows.attempt_id.astype(str).tolist(),
-                         "assessment_ids": rows.assessment_id.astype(str).tolist(),
-                         "cutoff_at": cutoff.isoformat()}
+    evidence=evidence.sort_values(["_time","attempt_id","skill_id"],kind="mergesort")
+    accum={}
+    for at,attempt_id,assessment_id,skill,score in evidence.itertuples(index=False,name=None):
+        row=accum.setdefault(skill,{"sum":0.0,"count":0,"attempt_ids":[],"assessment_ids":[]})
+        row["sum"]+=float(score); row["count"]+=1
+        row["attempt_ids"].append(str(attempt_id)); row["assessment_ids"].append(str(assessment_id))
+    result={skill:{"mastery":row["sum"]/row["count"],"attempt_ids":row["attempt_ids"],
+                   "assessment_ids":row["assessment_ids"],"cutoff_at":cutoff.isoformat()}
+            for skill,row in accum.items()}
     return result
 
 
