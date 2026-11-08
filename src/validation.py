@@ -175,22 +175,26 @@ def validate(tables, recommendations=None, paths=None, decisions=None, events=No
             expanded_evidence=expand_evidence(tables)
             evidence_by_learner={k:v for k,v in expanded_evidence.groupby("learner_id",sort=False)}
             mapping=tables["content_skills"].drop_duplicates(["content_id","skill_id"])
-            content_by_id=tables["content_items"].set_index("content_id")
-            course_by_id=tables["courses"].set_index("course_id")
-            learner_by_id=tables["learners"].set_index("learner_id")
+            skills_by_content=mapping.groupby("content_id",sort=False).skill_id.apply(lambda values:sorted(set(values))).to_dict()
+            content_by_id=tables["content_items"].set_index("content_id").to_dict("index")
+            course_by_id=tables["courses"].set_index("course_id").course_status.to_dict()
+            learner_by_id=tables["learners"].set_index("learner_id").learner_status.to_dict()
+            recommendation_times=parse_utc(recommendations.recommended_at).tolist()
+            recommendation_masteries=pd.to_numeric(recommendations.mastery_at_recommendation,errors="coerce").tolist()
+            recommendation_ranks=pd.to_numeric(recommendations["rank"],errors="coerce").tolist()
             mastery_cache={}; active_cache={}
-            for r in recommendations.itertuples(index=False):
+            for rec_idx,r in enumerate(recommendations.itertuples(index=False)):
                 if r.learner_id not in learners: issues.append(_issue("recommendations",r.recommendation_id,"learner_id","INVALID_FOREIGN_KEY","learner ID",r.learner_id)); continue
                 if r.content_id not in contents: issues.append(_issue("recommendations",r.recommendation_id,"content_id","INVALID_FOREIGN_KEY","content ID",r.content_id)); continue
                 if r.skill_id not in skills: issues.append(_issue("recommendations",r.recommendation_id,"skill_id","INVALID_FOREIGN_KEY","skill ID",r.skill_id)); continue
-                asof=parse_utc(pd.Series([r.recommended_at])).iloc[0]
+                asof=recommendation_times[rec_idx]
                 if pd.isna(asof):
                     issues.append(_issue("recommendations",r.recommendation_id,"recommended_at","INVALID_TIMESTAMP","ISO-8601 UTC time",r.recommended_at)); continue
                 key=(r.learner_id,asof.isoformat())
                 if key not in mastery_cache:
                     mastery_cache[key]=summarize_evidence(evidence_by_learner.get(r.learner_id,expanded_evidence.iloc[0:0]),asof)
                 estimate=mastery_cache[key].get(r.skill_id,{"mastery":0.0,"attempt_ids":[],"assessment_ids":[]})
-                recorded=pd.to_numeric(pd.Series([r.mastery_at_recommendation]),errors="coerce").iloc[0]
+                recorded=recommendation_masteries[rec_idx]
                 if pd.isna(recorded) or abs(float(recorded)-estimate["mastery"])>MASTERY_TOLERANCE:
                     issues.append(_issue("recommendations",r.recommendation_id,"mastery_at_recommendation","MASTERY_RECONCILIATION_FAILED",estimate["mastery"],recorded))
                 if {"evidence_attempt_ids","evidence_assessment_ids"}.issubset(recommendations.columns):
@@ -203,7 +207,7 @@ def validate(tables, recommendations=None, paths=None, decisions=None, events=No
                 if "explanation_json" in recommendations:
                     try:
                         details=json.loads(r.explanation_json)
-                        cutoff_text=parse_utc(pd.Series([details.get("history_cutoff_at")])).iloc[0]
+                        cutoff_text=pd.to_datetime(details.get("history_cutoff_at"),format="mixed",utc=True,errors="coerce")
                         if pd.notna(cutoff_text) and cutoff_text!=asof: issues.append(_issue("recommendations",r.recommendation_id,"history_cutoff_at","TEMPORAL_LEAKAGE",asof.isoformat(),details.get("history_cutoff_at")))
                         if details.get("source_attempt_ids")!=estimate["attempt_ids"]: issues.append(_issue("recommendations",r.recommendation_id,"source_attempt_ids","EVIDENCE_RECONCILIATION_FAILED",estimate["attempt_ids"],details.get("source_attempt_ids")))
                     except (TypeError,ValueError,AttributeError):
@@ -213,7 +217,7 @@ def validate(tables, recommendations=None, paths=None, decisions=None, events=No
                     for child,parent in active_prerequisites(prereqs,asof): active_map[child].append(parent)
                     active_cache[key]=active_map
                 active_map=active_cache[key]
-                actual_skills=sorted(mapping.loc[mapping.content_id.eq(r.content_id),"skill_id"].unique())
+                actual_skills=skills_by_content.get(r.content_id,[])
                 if r.skill_id not in actual_skills: issues.append(_issue("recommendations",r.recommendation_id,"skill_id","CONTENT_SKILL_MISMATCH",actual_skills,r.skill_id))
                 if any(s not in skills for s in actual_skills): issues.append(_issue("recommendations",r.recommendation_id,"content_id","INVALID_CONTENT_SKILL_MAPPING",skills,actual_skills))
                 try:
@@ -228,17 +232,17 @@ def validate(tables, recommendations=None, paths=None, decisions=None, events=No
                     for parent in active_map.get(mapped_skill,[]):
                         if mastery_cache[key].get(parent,{"mastery":0.0})["mastery"]<.7:
                             issues.append(_issue("recommendations",r.recommendation_id,"skill_id","PREREQUISITE_VIOLATION",parent,mapped_skill)); break
-                item=content_by_id.loc[r.content_id]
-                course=course_by_id.loc[item.course_id]
-                learner=learner_by_id.loc[r.learner_id]
-                if learner.learner_status!="Active": issues.append(_issue("recommendations",r.recommendation_id,"learner_id","INACTIVE_LEARNER_RECOMMENDED","Active",learner.learner_status))
-                if item.content_status!="Active" or course.course_status!="Active": issues.append(_issue("recommendations",r.recommendation_id,"content_id","INACTIVE_CONTENT_RECOMMENDED","active content and course",r.content_id))
-                rank=pd.to_numeric(pd.Series([r.rank]),errors="coerce").iloc[0]
+                item=content_by_id[r.content_id]
+                course=course_by_id[item["course_id"]]
+                learner=learner_by_id[r.learner_id]
+                if learner!="Active": issues.append(_issue("recommendations",r.recommendation_id,"learner_id","INACTIVE_LEARNER_RECOMMENDED","Active",learner))
+                if item["content_status"]!="Active" or course!="Active": issues.append(_issue("recommendations",r.recommendation_id,"content_id","INACTIVE_CONTENT_RECOMMENDED","active content and course",r.content_id))
+                rank=recommendation_ranks[rec_idx]
                 if pd.isna(rank) or rank<1 or float(rank)!=int(rank): issues.append(_issue("recommendations",r.recommendation_id,"rank","INVALID_RANK",">= 1 integer",r.rank))
                 if "status" in recommendations and r.status!="Recommended": issues.append(_issue("recommendations",r.recommendation_id,"status","INVALID_LIFECYCLE_STATE","Recommended",r.status))
                 if {"difficulty_target","difficulty_selected","difficulty_fallback"}.issubset(recommendations.columns):
                     mastery_target="Beginner" if estimate["mastery"]<.5 else ("Intermediate" if estimate["mastery"]<.7 else "Advanced")
-                    selected_level=item.difficulty_level
+                    selected_level=item["difficulty_level"]
                     if r.difficulty_target!=mastery_target or r.difficulty_selected!=selected_level or bool(r.difficulty_fallback)!=(selected_level!=mastery_target):
                         issues.append(_issue("recommendations",r.recommendation_id,"difficulty_selected","DIFFICULTY_EXPLANATION_MISMATCH",{"target":mastery_target,"selected":selected_level},r.difficulty_selected))
 
@@ -246,7 +250,7 @@ def validate(tables, recommendations=None, paths=None, decisions=None, events=No
         expected={"learning_path_id","snapshot_id","learner_id","sequence_no","recommendation_id","content_id","created_at","status"}
         if not expected.issubset(paths.columns): issues.append(_issue("learning_paths",None,"*","MISSING_COLUMNS",sorted(expected-set(paths.columns)),list(paths.columns)))
         elif recommendations is not None:
-            rec_by_id=recommendations.set_index("recommendation_id") if "recommendation_id" in recommendations else pd.DataFrame()
+            rec_by_id=recommendations.set_index("recommendation_id").to_dict("index") if "recommendation_id" in recommendations else {}
             for learner_id,group in paths.groupby("learner_id",dropna=False):
                 if learner_id not in set(tables["learners"].learner_id): issues.append(_issue("learning_paths",learner_id,"learner_id","INVALID_FOREIGN_KEY","learner ID",learner_id)); continue
                 for path_id,path_group in group.groupby("learning_path_id"):
@@ -256,13 +260,13 @@ def validate(tables, recommendations=None, paths=None, decisions=None, events=No
                     if path_group.content_id.duplicated().any(): issues.append(_issue("learning_paths",path_id,"content_id","NO_PROGRESS_LOOP","no duplicate activity in one path",path_group.content_id.tolist()))
                     if not path_group.status.isin(["Active","Completed","Blocked","Archived"]).all(): issues.append(_issue("learning_paths",path_id,"status","INVALID_LIFECYCLE_STATE","Active/Completed/Blocked/Archived",path_group.status.tolist()))
                     for r in path_group.itertuples(index=False):
-                        if r.recommendation_id not in rec_by_id.index:
+                        if r.recommendation_id not in rec_by_id:
                             issues.append(_issue("learning_paths",path_id,"recommendation_id","INVALID_FOREIGN_KEY","recommendation ID",r.recommendation_id)); continue
-                        rr=rec_by_id.loc[r.recommendation_id]
-                        if r.learner_id!=rr.learner_id: issues.append(_issue("learning_paths",path_id,"learner_id","PATH_RECOMMENDATION_OWNER_MISMATCH",rr.learner_id,r.learner_id))
-                        if r.content_id!=rr.content_id: issues.append(_issue("learning_paths",path_id,"content_id","PATH_RECOMMENDATION_CONTENT_MISMATCH",rr.content_id,r.content_id))
+                        rr=rec_by_id[r.recommendation_id]
+                        if r.learner_id!=rr["learner_id"]: issues.append(_issue("learning_paths",path_id,"learner_id","PATH_RECOMMENDATION_OWNER_MISMATCH",rr["learner_id"],r.learner_id))
+                        if r.content_id!=rr["content_id"]: issues.append(_issue("learning_paths",path_id,"content_id","PATH_RECOMMENDATION_CONTENT_MISMATCH",rr["content_id"],r.content_id))
                         if r.sequence_no!=rr.get("rank"): issues.append(_issue("learning_paths",path_id,"sequence_no","PATH_RECOMMENDATION_RANK_MISMATCH",rr.get("rank"),r.sequence_no))
-                        if r.snapshot_id!=rr.snapshot_id: issues.append(_issue("learning_paths",path_id,"snapshot_id","SNAPSHOT_MISMATCH",rr.snapshot_id,r.snapshot_id))
+                        if r.snapshot_id!=rr["snapshot_id"]: issues.append(_issue("learning_paths",path_id,"snapshot_id","SNAPSHOT_MISMATCH",rr["snapshot_id"],r.snapshot_id))
     if decisions is not None and "learner_id" in decisions:
         missing=set(tables["learners"].learner_id)-set(decisions.learner_id)
         for learner_id in list(missing)[:100]: issues.append(_issue("learner_decisions",learner_id,"decision_code","DECISION_MISSING","one per learner",None))
